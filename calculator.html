@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto PnL Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Crypto PnL Calculator</h1>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <span class="mode-label">Spot</span>
+            <label class="switch">
+                <input type="checkbox" id="modeToggle">
+                <span class="slider round"></span>
+            </label>
+            <span class="mode-label">Futures</span>
+        </div>
+
+        <!-- Calculator Section -->
+        <div class="calculator">
+            <label>Entry Price:
+                <input type="number" id="entryPrice" placeholder="Enter entry price">
+            </label>
+            <label>Exit Price:
+                <input type="number" id="exitPrice" placeholder="Enter exit price">
+            </label>
+            <label>Investment Amount:
+                <input type="number" id="investment" placeholder="Enter investment amount">
+            </label>
+
+            <!-- Futures Section -->
+            <div id="futuresSection" class="hidden">
+                <label>Leverage: <span id="leverageValue">1x</span></label>
+                <input type="range" id="leverageSlider" min="1" max="100" value="1">
+
+                <button id="buyLongBtn" class="buy-long">Buy Long</button>
+                <button id="sellShortBtn" class="sell-short">Sell Short</button>
+            </div>
+
+            <!-- Calculate Button -->
+            <button id="calculateBtn">Calculate</button>
+
+            <!-- Results Section -->
+            <div id="results" class="hidden">
+                <h2>Results</h2>
+                <p id="pnlResult"></p>
+                <p id="finalBalance"></p>
+
+                <!-- Back to Home Button -->
+                <button id="backToHome" onclick="window.location.href='index.html'">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

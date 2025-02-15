@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Prices</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Function to fetch real-time crypto prices
+        async function fetchCryptoPrices() {
+            const priceResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
+            const priceData = await priceResponse.json();
+
+            // Displaying the fetched prices in the HTML
+            document.getElementById('bitcoin-price').textContent = '$' + priceData.bitcoin.usd;
+            document.getElementById('ethereum-price').textContent = '$' + priceData.ethereum.usd;
+            document.getElementById('solana-price').textContent = '$' + priceData.solana.usd;
+        }
+
+        // Function to fetch the top gainers and losers
+        async function fetchGainersAndLosers() {
+            const gainersLosersResponse = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=percent_change_24h&per_page=10&page=1');
+            const gainersLosersData = await gainersLosersResponse.json();
+
+            const gainers = gainersLosersData.filter(coin => coin.price_change_percentage_24h > 0);
+            const losers = gainersLosersData.filter(coin => coin.price_change_percentage_24h < 0);
+
+            // Display the top 5 gainers
+            const gainersList = document.getElementById('gainers-list');
+            gainersList.innerHTML = '';
+            gainers.slice(0, 5).forEach(coin => {
+                const li = document.createElement('li');
+                li.textContent = `${coin.name}: ${coin.price_change_percentage_24h.toFixed(2)}%`;
+                gainersList.appendChild(li);
+            });
+
+            // Display the top 5 losers
+            const losersList = document.getElementById('losers-list');
+            losersList.innerHTML = '';
+            losers.slice(0, 5).forEach(coin => {
+                const li = document.createElement('li');
+                li.textContent = `${coin.name}: ${coin.price_change_percentage_24h.toFixed(2)}%`;
+                losersList.appendChild(li);
+            });
+        }
+
+        // Fetch prices and gainers/losers on page load
+        window.onload = function() {
+            fetchCryptoPrices();
+            fetchGainersAndLosers();
+        };
+
+        // Toggle display for Gainers or Losers
+        function toggleSection(section) {
+            const sectionElement = document.getElementById(`${section}-section`);
+            const isVisible = sectionElement.style.display === 'block';
+
+            // Hide or show the section based on current visibility
+            sectionElement.style.display = isVisible ? 'none' : 'block';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Crypto Prices</h1>
+        <p>Live cryptocurrency prices:</p>
+        
+        <!-- Prices Box -->
+        <div class="prices-box">
+            <p><strong>Bitcoin:</strong> <span id="bitcoin-price">Loading...</span></p>
+            <p><strong>Ethereum:</strong> <span id="ethereum-price">Loading...</span></p>
+            <p><strong>Solana:</strong> <span id="solana-price">Loading...</span></p>
+        </div>
+        
+        <!-- Buttons for Gainers and Losers -->
+        <div class="buttons-container">
+            <button onclick="toggleSection('gainers')">Top Gainers</button>
+            <button onclick="toggleSection('losers')">Top Losers</button>
+        </div>
+
+        <!-- Gainers Section -->
+        <div id="gainers-section" class="section-content" style="display:none;">
+            <h2>Top 5 Gainers (24h)</h2>
+            <ul id="gainers-list">
+                <!-- Top gainers will be listed here -->
+            </ul>
+        </div>
+
+        <!-- Losers Section -->
+        <div id="losers-section" class="section-content" style="display:none;">
+            <h2>Top 5 Losers (24h)</h2>
+            <ul id="losers-list">
+                <!-- Top losers will be listed here -->
+            </ul>
+        </div>
+
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </div>
+</body>
+</html>

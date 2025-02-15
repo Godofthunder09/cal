@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto News</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional styles for the news section */
+        .news-section {
+            margin-top: 20px;
+        }
+        .news-article {
+            background-color: #2a2d3e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .news-article h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .news-article p {
+            font-size: 14px;
+        }
+        .news-article a {
+            color: #00c853;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .news-article a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Crypto News</h1>
+        <p>Latest updates and trends in the crypto world (24-hour news).</p>
+
+        <!-- Dynamic News Articles Section -->
+        <div class="news-section" id="news-section">
+            <p>Loading news...</p>
+        </div>
+
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </div>
+
+    <script>
+        async function fetchCryptoNews() {
+            try {
+                // Fetch live crypto news (about 24 hours old)
+                const response = await fetch('https://api.coingecko.com/api/v3/status_updates');
+                const data = await response.json();
+
+                const newsSection = document.getElementById('news-section');
+                newsSection.innerHTML = '';  // Clear previous news
+
+                // Display up to 5 most recent updates (around 24 hours old)
+                data.status_updates.slice(0, 5).forEach(news => {
+                    const article = document.createElement('div');
+                    article.classList.add('news-article');
+                    article.innerHTML = `
+                        <h3>${news.project.name || 'Crypto News'}</h3>
+                        <p>${news.description}</p>
+                        <a href="${news.url}" target="_blank">Read more</a>
+                    `;
+                    newsSection.appendChild(article);
+                });
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                document.getElementById('news-section').innerHTML = '<p>Failed to load news. Please try again later.</p>';
+            }
+        }
+
+        // Fetch the crypto news every 1 minute (60000 ms)
+        fetchCryptoNews();
+        setInterval(fetchCryptoNews, 60000);  // Refresh every minute
+    </script>
+</body>
+</html>
